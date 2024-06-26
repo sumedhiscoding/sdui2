@@ -4,34 +4,27 @@ import ButtonControl from "../components/Button";
 export const mapperComponents = [
     {
         name: "input",
-        tag: FormControl({type:"text"}),
-        attributes: {
-            type: "text",
-        }
+        tag: FormControl,
     },
     {
         name: "textarea",
-        tag: FormControl({type:"textarea"}),
-        attributes: {
-            type: "textarea",
-        }
+        tag: FormControl,
+
     },
     {
-        name:"button",
-        tag:ButtonControl("Submit"),
-        
-        
+        name: "button",
+        tag: ButtonControl,
     }
 
 ]
 
 
-export const mapper=(name)=>{
-    console.log("name",name);
-    const elem= mapperComponents.find((elem,id)=>{
-        return elem.name==String(name);
-     }) 
-     return elem.tag;
+export const mapper = (name) => {
+    console.log("name", name);
+    const elem = mapperComponents.find((elem, id) => {
+        return elem.name == String(name);
+    })
+    return elem.tag;
 }
 
 

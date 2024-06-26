@@ -3,9 +3,9 @@ import { Button } from 'react-bootstrap'
 
 
 
-const ButtonControl = (children) => {
+const ButtonControl = (props,children) => {
   return (
-    <Button>{children}</Button>
+    <Button {...props} >{children}</Button>
   )
 }
 
