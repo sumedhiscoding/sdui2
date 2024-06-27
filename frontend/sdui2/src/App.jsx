@@ -109,12 +109,11 @@ const App = () => {
               (
                 <>
                   {console.log("values in values cc", props.values)}
-                  <Field
-                    {...arrayofComps[0]?.props}
-                    // name="email"
-                    onChange={(e) => props.setFieldValue(arrayofComps[0]?.props.name,e.target.value)}
-                    component={arrayofComps[0]?.function} />
-                  {/* { arrayofButtons[0].function({events:arrayofButtons[0].events,props:arrayofButtons[0].props},arrayofButtons[0].children)} */}
+                  {arrayofComps &&
+                    arrayofComps.map((elem) => {
+                      return (<Field {...elem?.props} onChange={(e) => props.setFieldValue(elem?.props.name, e.target.value)} component={elem.function} />)
+                    })
+                  }
                   {
                     arrayofButtons.map((elem, id) => {
                       return (<>{elem.function({ events: elem.events, props: elem.props }, elem.children)} </>)
