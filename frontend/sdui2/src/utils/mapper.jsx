@@ -20,7 +20,7 @@ export const mapperComponents = [
 
 
 export const mapper = (name) => {
-    console.log("name", name);
+    console.log("name", name,typeof(name));
     const elem = mapperComponents.find((elem, id) => {
         return elem.name == String(name);
     })
