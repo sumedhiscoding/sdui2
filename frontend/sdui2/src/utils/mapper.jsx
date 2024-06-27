@@ -1,6 +1,7 @@
 import React from "react";
 import FormControl from "../components/FormControlModified";
 import ButtonControl from "../components/Button";
+import DropdownModified from "../components/DropdownModified";
 export const mapperComponents = [
     {
         name: "input",
@@ -14,6 +15,10 @@ export const mapperComponents = [
     {
         name: "button",
         tag: ButtonControl,
+    },
+    {
+        name:"dropdown",
+        tag:DropdownModified
     }
 
 ]
@@ -24,7 +29,7 @@ export const mapper = (name) => {
         return elem.name == String(name);
     })
     console.log("elem tag is",elem.tag)
-    return elem.tag;
+    return elem?.tag;
 }
 
 

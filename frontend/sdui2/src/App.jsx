@@ -111,7 +111,7 @@ const App = () => {
                   {console.log("values in values cc", props.values)}
                   {arrayofComps &&
                     arrayofComps.map((elem) => {
-                      return (<Field {...elem?.props} onChange={(e) => props.setFieldValue(elem?.props.name, e.target.value)} component={elem.function} />)
+                      return (<Field {...{events:{...elem?.events} ,props:{...elem?.props}}} onChange={(e) => props.setFieldValue(elem?.props.name, e.target.value)} component={elem.function} />)
                     })
                   }
                   {
