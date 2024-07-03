@@ -9,7 +9,7 @@ import { mapperComponents } from './utils/mapper';
 import { Field, Form, Formik } from 'formik';
 import FormControl from './components/FormControlModified';
 import ButtonControl from './components/Button';
-
+import DropdownModified from './components/DropdownModified';
 
 
 const MyInput = ({ field, form, ...props }) => {
@@ -22,7 +22,8 @@ const App = () => {
   const [componentsObjs, setComponentObjs] = useState(null);
   const [componentsTags, setComponentTags] = useState([]);
   const [component, setComponent] = useState(null);
-  const [arrayofComps, setArrayofComps] = useState([]);
+  const [arrayofInputs, setarrayofInputs] = useState([]);
+  const [arrayofDropDowns, setArrayofDropdowns] = useState([]);
   const [arrayofButtons, setArrayofButtons] = useState([]);
   // useEffect to call our meta json 
   useEffect(() => {
@@ -45,18 +46,21 @@ const App = () => {
     const temp2 = ui?.sublayout.components;
     console.log("temp2", temp2);
     setComponentObjs(ui?.sublayout.components)
-
-
-
   }, [ui])
 
+  const options = [
+    { label: "afdsfasdf", value: "123131" },
+    { label: "afdsfa", value: "13231231" },
+    { label: "aadkfjbadjfb", value: "1210293" },
+    { label: "afdsfasdf", value: "123131" }
+  ]
 
 
   useEffect(() => {
     console.log("componentsObjs", componentsObjs)
     let temp = componentsObjs?.map((elem, id) => {
       console.log("mapper", elem);
-      if (elem.field != "button") {
+      if (elem.field == "input") {
         console.log("sumedh", mapper(elem.field))
         return { function: mapper(elem.field), props: elem.props, children: elem.children, events: elem.events }
         // (elem.props, elem.children)
@@ -73,29 +77,34 @@ const App = () => {
     }).filter((elem) => {
       return elem != undefined
     })
-    setArrayofComps(temp);
+
+    let temp3 = componentsObjs?.map((elem, id) => {
+      if (elem.field == "dropdown")
+        return { function: mapper(elem.field), props: elem.props, children: elem.children, events: elem.events }
+    }).filter(elem => {
+      return elem != undefined
+    })
+
+    setarrayofInputs(temp);
     setArrayofButtons(temp2);
+    setArrayofDropdowns(temp3);
     console.log("array of component objects", temp);
     console.log("array of temp2 ", temp2)
   }, [componentsObjs])
 
   useEffect(() => {
-    console.log("Array of components", arrayofComps);
+    console.log("Array of components", arrayofInputs);
     console.log("Array of Buttons", arrayofButtons);
-  }, [arrayofComps, arrayofButtons])
-
-  const getfunc = {
-    "ASd": FormControl
-  }
+    console.log("Array of Dropdowns", arrayofDropDowns);
+  }, [arrayofInputs, arrayofButtons, arrayofDropDowns])
 
   return (
     <div>
 
       <Formik
-        initialValues={{ email: '', email2: '' }}
+        initialValues={{ email: '', lastname: '', Company: "", Plans: "" }}
         onSubmit={(values, actions) => {
           console.log("values in values", values)
-
           setTimeout(() => {
             alert(JSON.stringify(values, null, 2));
             actions.setSubmitting(false);
@@ -105,13 +114,23 @@ const App = () => {
         {(props) => (
           <Form>
             {
-              arrayofComps && arrayofButtons.length &&
+              arrayofInputs && arrayofButtons.length &&
               (
                 <>
                   {console.log("values in values cc", props.values)}
-                  {arrayofComps &&
-                    arrayofComps.map((elem) => {
-                      return (<Field {...{events:{...elem?.events} ,props:{...elem?.props}}} onChange={(e) => props.setFieldValue(elem?.props.name, e.target.value)} component={elem.function} />)
+                  {/* {arrayofInputs &&
+                    arrayofInputs.map((elem) => {
+                      { console.log("elem events", elem.events) }
+                      return (<Field {...{ events: elem.events, props: { ...elem?.props } }} onChange={(e) =>{ console.log("xxxx",e); props.setFieldValue(elem?.props.name, e.target.value)}} component={elem.function} />)
+                    })
+                  } */}
+                  <Field name="email" placeholder="Enter Company Name" onChange={(e)=>{
+                    console.log("aldsfnadf lkadnflasdf lakdf")
+                  }} component={FormControl} />
+                  {
+                    arrayofDropDowns &&
+                    arrayofDropDowns.map((elem) => {
+                      return (<Field {...{ events: elem.events, props: { ...elem?.props } }} name="Company" component={DropdownModified} ></Field>)
                     })
                   }
                   {

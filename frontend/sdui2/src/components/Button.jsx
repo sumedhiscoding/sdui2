@@ -22,14 +22,6 @@ const ButtonControl = (props, children) => {
     onClick: ()=> handleClick(events?.find((elem)=>elem.event_name=="onClick")?.event_data) || null,
     onMouseEnter: ()=>handleMouseEnter(events?.find((elem)=>elem?.event_name=="onMouseEnter")?.event_data) || null,
   };
-
-
-
-
-
-
-
-
   return (
     <>
       {/* {console.log("onclick ",{)} */}

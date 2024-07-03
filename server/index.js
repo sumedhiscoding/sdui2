@@ -5,6 +5,26 @@ const app = express();
 
 app.use(cors());
 
+const plansData = {
+    plansForCompanies: [
+        {
+            companyName: "Tata",
+            plans: ["Plan A", "Plan B"]
+        },
+        {
+            companyName: "ABC",
+            plans: ["Plan C, Plan D"]
+        },
+        {
+            companyName: "FireFox",
+            plans: ["Plan E", "Plan F"]
+        },
+        {
+            companyName: "Google",
+            plans: ["Plan G", "Plan H"]
+        }
+    ]
+}
 app.get("/button", (req, res) => {
     res.json({
         sublayout: {
@@ -27,7 +47,7 @@ app.get("/button", (req, res) => {
 
                             }
                         }
-                       
+
                     ]
                 }
             ]
@@ -45,7 +65,7 @@ app.get("/", (req, res) => {
                     props: {
                         name: "email",
                         type: "email",
-                        placeholder: "Enter the name",
+                        placeholder: "Enter the email",
                     },
                     validations: {
                         required: true,
@@ -53,32 +73,49 @@ app.get("/", (req, res) => {
                     }
                 },
                 {
-                    field:"dropdown",
-                    props:{
-                        title:"Company",
+                    field: "input",
+                    props: {
+                        name: "lastname",
+                        type: "text",
+                        placeholder: "Enter the lastname",
                     },
-                    events:[
+                    validations: {
+                        required: true,
+
+                    }
+                },
+                {
+                    field: "dropdown",
+                    props: {
+                        title: "Company",
+                        conditional_rendered:false
+                    },
+                    events: [
                         {
-                            event_name:"useEffect",
-                            event_data:{
-                                event_type:"data fetching",
-                                endpoint:"http://localhost:3000/companies"
+                            event_name: "onClick",
+                            event_data: {
+                                event_type: "data fetching",
+                                endpoint: "http://localhost:3000/companies"
                             }
                         }
                     ]
                 },
                 {
-                    field:"dropdown",
-                    props:{
-                        title:"Plans",
-                        disabled:true
+                    field: "dropdown",
+                    props: {
+                        title: "Plans",
+                        conditional_rendered:true
+                        // disabled:true
                     },
-                    events:[
+                    condition:{
+                        Company:true
+                    },
+                    events: [
                         {
-                            event_name:"useEffect",
-                            event_data:{
-                                event_type:"open_modal",
-                                endpoint:"http://localhost:3000/plans"
+                            event_name: "onClick",
+                            event_data: {
+                                event_type: "open_modal",
+                                endpoint: "http://localhost:3000/plans"
                             }
                         }
                     ]
@@ -95,6 +132,7 @@ app.get("/", (req, res) => {
                     props: {
                         variant: "secondary",
                         size: "md",
+                        
                         // disabled: "true",
                     },
                     children: "Fetch Data",
@@ -105,9 +143,10 @@ app.get("/", (req, res) => {
                                 event_type: "data-fetching",
                                 endpoint: "http://localhost:3000/endpoint",
 
-                            }
+                            },
+                            event_res_data_name: "plans"
                         }
-                       
+
                     ]
                 }
 
@@ -120,16 +159,46 @@ app.get("/endpoint", (req, res) => {
     res.json({ message: "Hi this is my endpoints" });
 })
 
-app.get('/companies',(req,res)=>{
-    res.json({companies:[
-        "Tata",
-        "ABC",
-        "FireFox",
-        "Google",
-    ]})
+app.get('/companies', (req, res) => {
+    res.json([
+        {
+            name: "Tata",
+            id: 123,
+        },
+        {
+            name: "ABC",
+            id: 1234,
+
+        },
+        {
+            name: "FireFox",
+            id: 12345,
+
+        },
+        {
+            name: "Google",
+            id: 12367,
+        },
+    ])
+})
+
+app.get('/plans', (req, res) => {
+    // res.json(getPlansByCompanyName(req.body.companyName))
+
+    res.json([
+        {name:"Plan A", id:1},
+        {name:"Plan B", id:2},
+        {name:"Plan C", id:3},
+        {name:"Plan D", id:4},
+    ])
+
+
 })
 
 
+function getPlansByCompanyName(companyName) {
+    return plansData.find((data) => data.companyName == companyName).plans;
+}
 
 
 

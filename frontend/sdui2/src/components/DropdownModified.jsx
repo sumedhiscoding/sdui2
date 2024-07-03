@@ -1,47 +1,49 @@
-import React ,{useState}from 'react'
+import React, { useState } from 'react'
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import axios from "axios"
+import FormControl from './FormControlModified';
 const DropdownModified = (properties, children) => {
-    const [datafromApi,setDataFromApis]=useState([]);
-    
-    
+    const [datafromApi, setDataFromApis] = useState([]);
+    const { props, events,...rest } = properties;
+    const [conditionalrendered, setConditionalRendered] = useState(props?.conditional_rendered);
+    console.log("conditionalrendered", conditionalrendered)
     console.log("properties in dropdown", properties)
-    const { props, events } = properties;
+    console.log("events in dropdown", events);
 
-
-    const handleMouseEnter=()=>{
-        console.log("HI");
+    const handleMouseEnter = () => {
     }
-    
-    const handleOnClick=(args)=>{
-        try{
-            axios.get("http://localhost:3000/companies").then(res=>{
-                console.log(res.data.companies);
-                setDataFromApis(res.data.companies);                
-            }).catch(err=>console.log(err))
+
+    const handleOnClick = (args) => {
+        console.log("args", args)
+        try {
+            axios.get(args.endpoint).then(res => {
+                console.log(res.data);
+                setDataFromApis(res.data);
+            }).catch(err => console.log(err))
         }
-        catch(err){
+        catch (err) {
             console.log(err)
         }
 
     }
     const eventHandlers = {
-        onClick: () => handleOnClick() || null,
+        onClick: () => handleOnClick(events?.find((elem) => elem.event_name == "onClick")?.event_data) || null,
         onMouseEnter: () => handleMouseEnter() || null,
     }
 
 
     return (
         <div>
-            <DropdownButton {...eventHandlers} {...props}>
-               {
-                datafromApi &&
-                 datafromApi.map((elem,id)=>{
-                    return (<Dropdown.Item>{elem}</Dropdown.Item>)
-                 })
-               }
-            </DropdownButton >
+                <DropdownButton   {...props} title={rest.field.value ? rest.field.value  : props.title} {...eventHandlers}  disabled={conditionalrendered}  >
+                    {
+                        datafromApi?.map((elem) => {
+                            return <Dropdown.Item onClick={() =>{
+                                    console.log("options value",elem.id)
+                                rest.form.setFieldValue(props.title, elem.id)}}  value={elem.id}>{elem.name}</Dropdown.Item>
+                        })
+                    }
+                </DropdownButton >
         </div>
     )
 }
